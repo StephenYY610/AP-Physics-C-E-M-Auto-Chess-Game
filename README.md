@@ -1,21 +1,26 @@
-# AP Physics C: E&M Auto-Chess Quiz Game
+# AP Physics C: E&M Auto-Chess Quiz Game (Web)
 
-A terminal simulation of the rule set you provided:
+This is now an **actual browser game** (not a passive simulation).
 
-- 1v1 auto-chess economy loop (gold, reroll, level, XP, streaks)
-- AP Physics C: E&M problem units by cost (1–5)
-- Star upgrades (1⭐/2⭐/3⭐)
-- Synergy activation and bonus damage logic
-- Round loop with shop, lineup, quiz battle, and settlement
+## Features implemented
+- Two-player local play on one device.
+- Shop phase with reroll, buy, sell, buy-XP, bench, auto-set-field.
+- Level/XP progression and field size limits.
+- Unit costs 1–5 with star upgrades (3 copies merge).
+- Quiz battle phase where players answer prompts for each fielded unit.
+- Correct / wrong / timeout outcomes with damage and self-damage.
+- Synergy bonuses (electrostatics, gauss, circuits, magnetism, induction, potential, differential, combined).
+- End-of-round settlement with base income and auto XP.
 
-## Run
+## Run locally
+Just open `index.html` in a browser.
+
+For a local server:
 
 ```bash
-python3 game.py
+python3 -m http.server 8000
 ```
+Then visit `http://localhost:8000`.
 
-## Notes
-
-- This is a **fast classroom simulation mode** (Quick Question Mode style).
-- Question-answering is simulated probabilistically per unit (`correct/wrong/timeout`) so rounds resolve quickly.
-- The encoded constants map directly to your rules (XP table, field limits, reroll odds, base damage, synergy thresholds).
+## Tech
+- Vanilla HTML/CSS/JavaScript (no backend required).
