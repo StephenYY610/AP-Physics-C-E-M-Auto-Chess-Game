@@ -5,13 +5,13 @@ const BASE_DAMAGE={1:{correct:3,wrong:2,timeout:3},2:{correct:5,wrong:3,timeout:
 const SYNERGIES={electrostatics:[2,3,5],gauss:[1,3,4],circuits:[2,3,4],magnetism:[2,4,5],induction:[1,2,4,5],potential:[2,3,5],differential:[1,3,5],combined:[1,2,3]};
 const SYNERGY_DAMAGE={electrostatics:{2:2,3:4,5:7},gauss:{1:2,3:5,4:8},circuits:{2:2,3:4,4:6},magnetism:{2:2,4:5,5:7},induction:{1:1,2:3},potential:{2:2,3:4},differential:{1:2,3:5},combined:{1:3,2:6,3:10}};
 const POOL=[
-{name:"Field Direction",cost:1,tags:["electrostatics"],q:"Does electric field point from + to -?",a:"yes"},
-{name:"Ohm Quick",cost:2,tags:["circuits"],q:"Formula for voltage in resistor?",a:"V=IR"},
-{name:"Lorentz Force",cost:2,tags:["magnetism"],q:"Magnetic force formula?",a:"F=qvB"},
-{name:"Gauss Shell",cost:3,tags:["gauss"],q:"Outside a spherical shell E behaves as?",a:"kQ/r^2"},
-{name:"RC Initial",cost:3,tags:["circuits","differential"],q:"At t=0 charging capacitor is like?",a:"short"},
-{name:"Potential+Field",cost:4,tags:["potential","combined"],q:"Relation between E and V in 1D?",a:"E=-dV/dx"},
-{name:"Faraday Final",cost:5,tags:["induction","magnetism","combined"],q:"Induced EMF formula?",a:"emf=-dphi/dt"}
+{name:"Field Direction",cost:1,tags:["electrostatics"],q:"Does electric field point from + to -?",choices:["A) Yes","B) No","C) Only for conductors","D) Only in vacuum"],a:"A"},
+{name:"Ohm Quick",cost:2,tags:["circuits"],q:"Formula for voltage in resistor?",choices:["A) V=IR","B) V=I/R","C) V=R/I","D) V=qE"],a:"A"},
+{name:"Lorentz Force",cost:2,tags:["magnetism"],q:"Magnetic force formula (magnitude)?",choices:["A) F=qE","B) F=qvB","C) F=IL/R","D) F=mv/r"],a:"B"},
+{name:"Gauss Shell",cost:3,tags:["gauss"],q:"Outside a uniformly charged spherical shell, E is:",choices:["A) 0","B) kQ/r^2 outward","C) constant","D) inward r^2"],a:"B"},
+{name:"RC Initial",cost:3,tags:["circuits","differential"],q:"At t=0 for charging RC circuit, capacitor behaves like:",choices:["A) open circuit","B) short circuit","C) infinite battery","D) inductor"],a:"B"},
+{name:"Potential+Field",cost:4,tags:["potential","combined"],q:"Relation between E and V in 1D is:",choices:["A) E=dV/dx","B) E=-dV/dx","C) E=Vx","D) E=V/x^2"],a:"B"},
+{name:"Faraday Final",cost:5,tags:["induction","magnetism","combined"],q:"Faraday's law for induced emf is:",choices:["A) emf=dPhi/dt","B) emf=-dPhi/dt","C) emf=IR","D) emf=qvB"],a:"B"}
 ];
 
 const state={round:1,phase:'shop',activePlayer:0,players:[mkPlayer('Player 1'),mkPlayer('Player 2')],shop:[],battleLog:[]};
@@ -39,7 +39,7 @@ function endShopTurn(){if(state.activePlayer===0){state.activePlayer=1; rollShop
 document.getElementById('end-shop').onclick=endShopTurn;
 
 function battle(){state.battleLog.push(`<b>Battle Round ${state.round}</b>`); for(let atk=0; atk<2; atk++){const a=state.players[atk],d=state.players[1-atk]; const counts={electrostatics:0,gauss:0,circuits:0,magnetism:0,induction:0,potential:0,differential:0,combined:0}; a.fielded.forEach(u=>u.tags.forEach(t=>counts[t]++)); let circuitsCorrect=0;
-    a.fielded.forEach(u=>{const ans=prompt(`${a.name} asks ${d.name}: ${u.name}\n${u.q}\n(Type answer; leave blank for timeout)`,''); let result='timeout'; if(ans!==null&&ans.trim()!==''){result=ans.trim().toLowerCase()===u.a.toLowerCase()?'correct':'wrong';}
+    a.fielded.forEach(u=>{const ans=prompt(`${a.name} asks ${d.name}: ${u.name}\n${u.q}\n${u.choices.join('\n')}\n(Type A/B/C/D; leave blank for timeout)`,''); let result='timeout'; if(ans!==null&&ans.trim()!==''){result=ans.trim().toUpperCase()===u.a.toUpperCase()?'correct':'wrong';}
       if(result==='correct'){let dmg=Math.floor(BASE_DAMAGE[u.cost].correct*(u.star===2?1.5:u.star===3?2:1)); u.tags.forEach(t=>{const tt=tier(t,counts[t]); dmg+= (SYNERGY_DAMAGE[t]&&SYNERGY_DAMAGE[t][tt])||0; if(t==='magnetism'&&tt===5&&Math.random()<0.3) dmg*=2; if(t==='induction'&&tt===4) dmg+=3; if(t==='induction'&&tt===5) dmg+=Math.floor(dmg*0.4);}); if(u.tags.includes('differential')&&tier('differential',counts.differential)===5) d.hp-=6; d.hp-=dmg; if(u.tags.includes('circuits')) circuitsCorrect++; state.battleLog.push(`<span class='good'>${a.name} correct on ${u.name}: -${dmg} HP to ${d.name}</span>`);} else {const loss=BASE_DAMAGE[u.cost][result]; a.hp-=loss; state.battleLog.push(`<span class='bad'>${a.name} ${result} on ${u.name}: -${loss} self HP</span>`);} }); if(tier('circuits',counts.circuits)===4&&circuitsCorrect>=2){d.hp-=3; state.battleLog.push(`<span class='good'>${a.name} circuits combo: extra 3 damage.</span>`);} }
   settlement();
 }
