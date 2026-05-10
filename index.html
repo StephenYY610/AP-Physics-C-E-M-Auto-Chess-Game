@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Physics C: E&M Auto-Chess Quiz Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>AP Physics C: E&M Auto-Chess Quiz Game</h1>
+    <p>2-player local web game (shop, lineup, battle, synergies, stars, XP, streaks)</p>
+  </header>
+
+  <main>
+    <section id="status"></section>
+
+    <section class="grid-2">
+      <div id="player-0" class="panel"></div>
+      <div id="player-1" class="panel"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Shop & Actions</h2>
+      <div id="shop-controls"></div>
+      <div id="shop"></div>
+      <div class="actions">
+        <button id="end-shop">Lock Shop Phase / Next Player</button>
+      </div>
+    </section>
+
+    <section class="panel" id="battle-panel">
+      <h2>Quiz Battle</h2>
+      <div id="battle"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
