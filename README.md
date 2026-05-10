@@ -24,3 +24,5 @@ Then visit `http://localhost:8000`.
 
 ## Tech
 - Vanilla HTML/CSS/JavaScript (no backend required).
+
+- Players answer the opponent's fielded questions (not their own).
